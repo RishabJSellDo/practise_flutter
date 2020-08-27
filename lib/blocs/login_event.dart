@@ -12,3 +12,9 @@ class OtpLogin extends LoginEvent {
 
   OtpLogin(this.mobileNo);
 }
+
+class ForgotPassword extends LoginEvent {
+  String email;
+
+  ForgotPassword(email);
+}
