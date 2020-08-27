@@ -94,7 +94,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   //sign-in button
                   Container(
                       margin: EdgeInsets.only(top: 24),
-                      child: BlocBuilder<LoginCubit, EventState<User>> (
+                      child: BlocBuilder<LoginCubit, EventState> (
                           cubit: _loginCubit,
                           builder: (BuildContext context, EventState state) {
                             return state.consumeState(() {
@@ -105,10 +105,10 @@ class _LoginScreenState extends State<LoginScreen> {
                               //loading
 
                               return loginLoader();
-                            }, (data) {
+                            }, (user) {
                               //success/content
 
-                              return Text("Welcome User");
+                              return Text('Welcome ${user.name}');
                             }, (exception) {
                               //error
                               print(state.getError());

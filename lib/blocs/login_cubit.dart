@@ -2,7 +2,7 @@ import 'package:Practise_flutter/user.dart';
 import 'package:Practise_flutter/utils/state.dart';
 import 'package:bloc/bloc.dart';
 
-class LoginCubit extends Cubit<EventState<User>> {
+class LoginCubit extends Cubit<EventState> {
   LoginCubit(EventState state) : super(state);
 
   User user;
@@ -17,13 +17,12 @@ class LoginCubit extends Cubit<EventState<User>> {
       //error
       emit(Error(error));
     });
-    //emit(Error(Exception("Login failed")));
   }
 
   Future<User> getUserFromRepo() async {
     //mimicing API latency
     await Future.delayed(Duration(seconds: 3));
-    throw Exception("401: User not found");
+    //throw Exception("401: User not found");
     return User("Rishab");
   }
 }
