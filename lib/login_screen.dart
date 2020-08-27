@@ -98,9 +98,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                   builder: (BuildContext context,
                                       LoginState state,) {
 
-                                    //uninitialized/default
+                                    //uninitialized
                                     if (state is LoginUninitialized) {
                                       return loginButton();
+                                    }
+
+                                    else if(state is LoggedIn) {
+                                      return Text("Welcome User");
                                     }
 
                                     //progress
@@ -108,7 +112,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       return loginLoader();
                                     }
 
-                                    //success
+                                    //error
                                     else if (state is LoginFailure) {
                                       print(state.error);
 
@@ -125,7 +129,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       return loginButton();
                                     }
 
-                                    //error
+                                    //default
                                     else
                                       return loginButton();
                                   })),

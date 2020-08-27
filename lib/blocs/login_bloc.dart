@@ -25,6 +25,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     //mimicing the login
     await Future.delayed(Duration(seconds: 3));
     final token = "Access Token";
+    //return LoggedIn(token);
     return LoginFailure(Exception("Login Failed"));
   }
 
