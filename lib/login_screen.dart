@@ -1,4 +1,6 @@
 import 'package:Practise_flutter/blocs/login_bloc.dart';
+import 'package:Practise_flutter/blocs/login_event.dart';
+import 'package:Practise_flutter/blocs/login_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,7 +15,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final primary_color = Color(0xFF0176FF);
-  LoginBloc _loginBloc = LoginBloc(LoginState.loginUninitialized);
+  LoginBloc _loginBloc = LoginBloc(LoginUninitialized());
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +24,6 @@ class _LoginScreenState extends State<LoginScreen> {
             body: Container(
               child: Stack(
                 children: [
-
                   //artwork & logo
                   Container(
                     width: double.infinity,
@@ -94,25 +95,39 @@ class _LoginScreenState extends State<LoginScreen> {
                               margin: EdgeInsets.only(top: 24),
                               child: BlocBuilder<LoginBloc, LoginState>(
                                   cubit: _loginBloc,
-                                  // ignore: missing_return
                                   builder: (BuildContext context,
                                       LoginState state,) {
-                                    switch (state) {
-                                      case LoginState.loginUninitialized:
-                                        return loginButton();
+
+                                    //uninitialized/default
+                                    if (state is LoginUninitialized) {
+                                      return loginButton();
+                                    }
 
                                     //progress
-                                      case LoginState.loginLoading:
-                                        return loginLoader();
+                                    else if (state is LoginLoading) {
+                                      return loginLoader();
+                                    }
 
                                     //success
-                                      case LoginState.loginSuccess:
-                                        return loginButton();
+                                    else if (state is LoginFailure) {
+                                      print(state.error);
+
+                                      //showing error
+                                      _onWidgetDidBuild((){
+                                        Scaffold.of(context).showSnackBar(
+                                          SnackBar(
+                                            content: Text('${state.error}'),
+                                            backgroundColor: Colors.red,
+                                          ),
+                                        );
+                                      });
+
+                                      return loginButton();
+                                    }
 
                                     //error
-                                      case LoginState.loginFailed:
-                                        return loginButton();
-                                    }
+                                    else
+                                      return loginButton();
                                   })),
                         ],
                       ),
@@ -128,7 +143,7 @@ class _LoginScreenState extends State<LoginScreen> {
       color: primary_color,
       elevation: 4,
       onPressed: () {
-        _loginBloc.add(LoginEvent.emailLogin);
+        _loginBloc.add(EmailLogin("email", "password"));
       },
       child: Text(
         'Sign in',
@@ -146,5 +161,11 @@ class _LoginScreenState extends State<LoginScreen> {
         backgroundColor: Colors.white,
       ),
     );
+  }
+
+  void _onWidgetDidBuild(Function callback) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      callback();
+    });
   }
 }
